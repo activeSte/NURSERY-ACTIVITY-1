@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Python, Anaconda &amp; Neural Networks — Technical School Course</title>
+<style>
+  :root{
+    --bg:#0f1220; --panel:#171a2e; --ink:#e8ecf8; --muted:#9aa3c7;
+    --accent:#5cc8ff; --accent2:#ffb454; --ok:#7ee787; --warn:#ff7b72;
+    --code:#0b0e1a; --border:#262b48;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+       background:linear-gradient(180deg,#0b0e1a,#0f1220);color:var(--ink);line-height:1.55}
+  header{padding:28px 24px;border-bottom:1px solid var(--border);
+         background:linear-gradient(90deg,#1b2150,#0f1220)}
+  h1{margin:0 0 6px;font-size:1.7rem}
+  h2{color:var(--accent);margin-top:0}
+  h3{color:var(--accent2)}
+  .sub{color:var(--muted);font-size:.95rem}
+  nav{display:flex;flex-wrap:wrap;gap:6px;padding:10px 16px;background:#11142a;
+      border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
+  nav button{background:#1f2547;color:var(--ink);border:1px solid var(--border);
+             padding:8px 12px;border-radius:8px;cursor:pointer;font-size:.85rem}
+  nav button.active{background:var(--accent);color:#0b0e1a;font-weight:600}
+  main{max-width:1100px;margin:0 auto;padding:24px}
+  section{display:none;background:var(--panel);border:1px solid var(--border);
+          border-radius:12px;padding:22px;margin-bottom:18px}
+  section.active{display:block}
+  pre{background:var(--code);border:1px solid var(--border);border-radius:8px;
+      padding:12px;overflow-x:auto;font-size:.88rem}
+  code{font-family:Menlo,Consolas,monospace;color:#cde}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.9rem}
+  th,td{border:1px solid var(--border);padding:8px;text-align:left;vertical-align:top}
+  th{background:#1f2547;color:var(--accent)}
+  tr:nth-child(even) td{background:#141832}
+  .pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.75rem;
+        background:#1f2547;color:var(--accent);border:1px solid var(--border);margin-right:4px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+  .card{background:#141832;border:1px solid var(--border);border-radius:10px;padding:14px}
+  .check{list-style:none;padding-left:0}
+  .check li{padding:6px 0;border-bottom:1px dashed var(--border)}
+  .check li::before{content:"☐ ";color:var(--accent)}
+  .check li.done::before{content:"☑ ";color:var(--ok)}
+  details{background:#141832;border:1px solid var(--border);border-radius:8px;
+          padding:10px;margin:8px 0}
+  summary{cursor:pointer;color:var(--accent2);font-weight:600}
+  .tag-meta{background:#2a1e3f;color:#d6b6ff}
+  .tag-phy{background:#1e3a3f;color:#a6e8f5}
+  .tag-eco{background:#3f2a1e;color:#ffd29a}
+  button.run{background:var(--ok);color:#0b0e1a;border:0;padding:6px 12px;
+             border-radius:6px;cursor:pointer;font-weight:600;margin-top:6px}
+  .out{background:#0b0e1a;border-left:3px solid var(--ok);padding:8px;
+       margin-top:6px;white-space:pre-wrap;font-family:monospace;font-size:.85rem;color:#cde}
+  .quiz label{display:block;padding:6px;background:#1b2042;border:1px solid var(--border);
+              border-radius:6px;margin:4px 0;cursor:pointer}
+  .quiz .correct{background:#1f3a26;border-color:var(--ok)}
+  .quiz .wrong{background:#3f1f1f;border-color:var(--warn)}
+  footer{text-align:center;color:var(--muted);padding:18px;font-size:.85rem}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🐍 Python · Anaconda · Neural Networks</h1>
+  <div class="sub">Interactive course for technical-school students · 9 worked applications · language comparisons</div>
+</header>
+
+<nav id="nav">
+  <button data-tab="t0" class="active">🏁 Start</button>
+  <button data-tab="t1">1 · Anaconda setup</button>
+  <button data-tab="t2">2 · Python syntax</button>
+  <button data-tab="t3">3 · Language compare</button>
+  <button data-tab="t4">4 · NN algorithms</button>
+  <button data-tab="t5">5 · Metalmechanical</button>
+  <button data-tab="t6">6 · Physics</button>
+  <button data-tab="t7">7 · Economy</button>
+  <button data-tab="t8">8 · Quiz</button>
+  <button data-tab="t9">9 · Checklist</button>
+</nav>
+
+<main>
+
+<!-- ====================== START ====================== -->
+<section id="t0" class="active">
+  <h2>How to use this course</h2>
+  <p>Each tab is one lesson (≈ 45–60 minutes). Click the green <b>Run</b> buttons to execute small JavaScript demos that imitate Python output. Real Python runs in Anaconda — install it in Lesson 1.</p>
+  <div class="grid">
+    <div class="card"><h3>🎯 Learning outcomes</h3>
+      <ul>
+        <li>Install &amp; use Anaconda + Jupyter</li>
+        <li>Read and write Python syntax</li>
+        <li>Compare Python to Java, C++/C#, Pascal, Fortran</li>
+        <li>Explain a neural network in plain words</li>
+        <li>Solve real problems in 3 fields</li>
+      </ul>
+    </div>
+    <div class="card"><h3>🧰 What you need</h3>
+      <ul>
+        <li>A PC with 4 GB RAM</li>
+        <li>Anaconda Distribution (free)</li>
+        <li>A notebook (paper or Jupyter)</li>
+        <li>Curiosity 🧠</li>
+      </ul>
+    </div>
+    <div class="card"><h3>📚 Map of the 9 applications</h3>
+      <ul>
+        <li><span class="pill tag-meta">Metal</span> Tool-wear · Tolerance · Weld quality</li>
+        <li><span class="pill tag-phy">Physics</span> Free fall · Pendulum · Ohm's law</li>
+        <li><span class="pill tag-eco">Eco</span> Shop sales · Inventory · Price elasticity</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== ANACONDA ====================== -->
+<section id="t1">
+  <h2>Lesson 1 — Installing Anaconda</h2>
+  <p><b>Anaconda</b> is a free package that brings Python + 250 scientific libraries (NumPy, pandas, scikit-learn, TensorFlow) + the <b>Jupyter Notebook</b> editor in a single installer.</p>
+  <h3>Steps</h3>
+  <ol>
+    <li>Go to <code>anaconda.com/download</code> and pick your OS.</li>
+    <li>Install with default options (≈ 3 GB).</li>
+    <li>Open <b>Anaconda Navigator</b> → launch <b>Jupyter Notebook</b>.</li>
+    <li>Create a new notebook → kernel <i>Python 3</i>.</li>
+    <li>Type and run <code>print("Hello, NN!")</code>.</li>
+  </ol>
+  <h3>Useful conda commands (terminal)</h3>
+<pre><code>conda create -n nncourse python=3.11
+conda activate nncourse
+conda install numpy pandas matplotlib scikit-learn
+pip install tensorflow
+jupyter notebook</code></pre>
+  <details><summary>Why Anaconda instead of plain Python?</summary>
+    Anaconda solves <i>dependency hell</i>: scientific libraries (BLAS, MKL, CUDA) are pre-compiled and isolated in environments, so a project for class never breaks a project for work.
+  </details>
+</section>
+
+<!-- ====================== PYTHON SYNTAX ====================== -->
+<section id="t2">
+  <h2>Lesson 2 — Python fundamentals, grammar &amp; syntax</h2>
+  <h3>The 6 building blocks</h3>
+  <table>
+    <tr><th>Block</th><th>Example</th><th>What it does</th></tr>
+    <tr><td>Variable</td><td><code>x = 5</code></td><td>Stores a value</td></tr>
+    <tr><td>Type</td><td><code>3.14</code> · <code>"hi"</code> · <code>True</code></td><td>float, string, boolean</td></tr>
+    <tr><td>Decision</td><td><code>if x&gt;0:</code></td><td>Choose a path</td></tr>
+    <tr><td>Loop</td><td><code>for i in range(10):</code></td><td>Repeat</td></tr>
+    <tr><td>Function</td><td><code>def f(x): return x*x</code></td><td>Re-use code</td></tr>
+    <tr><td>Library</td><td><code>import numpy as np</code></td><td>Borrow code</td></tr>
+  </table>
+  <h3>Indentation = grammar</h3>
+  <p>Unlike Java or C++, Python uses <b>spaces</b> (4 by convention) instead of <code>{ }</code> to mark blocks. Wrong indentation = syntax error.</p>
+<pre><code># sum the first 10 squares
+total = 0
+for i in range(1, 11):
+    total += i**2          # 4-space indent
+print("Sum =", total)      # → Sum = 385</code></pre>
+  <button class="run" onclick="demo1()">Run demo</button>
+  <div id="out1" class="out" style="display:none"></div>
+
+  <h3>Lists, dictionaries, functions</h3>
+<pre><code>prices = [12.5, 9.0, 4.75]          # list
+stock  = {"bread":40, "milk":12}    # dictionary
+
+def total(values, vat=0.22):
+    return sum(values) * (1 + vat)
+
+print(total(prices))                # → 31.99</code></pre>
+</section>
+
+<!-- ====================== LANGUAGE COMPARE ====================== -->
+<section id="t3">
+  <h2>Lesson 3 — Python vs Java, C++/C#, Turbo Pascal, Fortran</h2>
+  <p>Same task: <i>read 10 numbers, print their average</i>. Look at how much each language asks you to write.</p>
+  <details open><summary>🐍 Python (8 lines)</summary>
+<pre><code>nums = []
+for _ in range(10):
+    nums.append(float(input()))
+print(sum(nums)/len(nums))</code></pre></details>
+  <details><summary>☕ Java (≈ 18 lines)</summary>
+<pre><code>import java.util.Scanner;
+public class Avg {
+  public static void main(String[] a){
+    Scanner s = new Scanner(System.in);
+    double t = 0;
+    for (int i=0;i&lt;10;i++) t += s.nextDouble();
+    System.out.println(t/10);
+  }
+}</code></pre></details>
+  <details><summary>💠 C# (Visual C#)</summary>
+<pre><code>using System;
+class Avg{
+  static void Main(){
+    double t=0;
+    for(int i=0;i&lt;10;i++) t += double.Parse(Console.ReadLine());
+    Console.WriteLine(t/10);
+  }
+}</code></pre></details>
+  <details><summary>⚙️ Visual C++</summary>
+<pre><code>#include &lt;iostream&gt;
+int main(){
+  double x,t=0;
+  for(int i=0;i&lt;10;i++){ std::cin&gt;&gt;x; t+=x; }
+  std::cout &lt;&lt; t/10;
+}</code></pre></details>
+  <details><summary>📜 Turbo Pascal</summary>
+<pre><code>program Avg;
+var i:integer; x,t:real;
+begin
+  t:=0;
+  for i:=1 to 10 do begin readln(x); t:=t+x end;
+  writeln(t/10)
+end.</code></pre></details>
+  <details><summary>🧮 Fortran 90</summary>
+<pre><code>program avg
+  real :: x, t
+  integer :: i
+  t = 0.0
+  do i = 1, 10
+     read*, x ; t = t + x
+  end do
+  print*, t/10.0
+end program</code></pre></details>
+
+  <h3>Reasoned comparison</h3>
+  <table>
+    <tr><th>Criterion</th><th>Python</th><th>Java</th><th>C++ / C#</th><th>Turbo Pascal</th><th>Fortran</th></tr>
+    <tr><td>Typing</td><td>Dynamic</td><td>Static, strict</td><td>Static, strict</td><td>Static</td><td>Static</td></tr>
+    <tr><td>Block marker</td><td>Indent</td><td>{ }</td><td>{ }</td><td>begin/end</td><td>do/end</td></tr>
+    <tr><td>Compile or run</td><td>Interpreted</td><td>Bytecode (JVM)</td><td>Compiled</td><td>Compiled</td><td>Compiled</td></tr>
+    <tr><td>Best at</td><td>AI, data, scripts</td><td>Big business apps, Android</td><td>Games, OS, GUI</td><td>Teaching (legacy)</td><td>Numerical physics, HPC</td></tr>
+    <tr><td>Speed (raw)</td><td>Slow*</td><td>Fast</td><td>Very fast</td><td>Fast</td><td>Very fast</td></tr>
+    <tr><td>Lines for our task</td><td>4–8</td><td>≈ 18</td><td>≈ 10</td><td>≈ 8</td><td>≈ 9</td></tr>
+    <tr><td>Neural-net libraries</td><td>★★★★★</td><td>★★★ (DL4J)</td><td>★★ (libtorch)</td><td>—</td><td>★ (legacy)</td></tr>
+  </table>
+  <p class="sub">* Python is "slow" only in pure loops — its NN libraries call C / Fortran under the hood, so the real maths runs at the speed of C++.</p>
+  <h3>When to pick what</h3>
+  <ul>
+    <li><b>Python</b> → prototypes, AI, data analysis, school projects.</li>
+    <li><b>Java / C#</b> → robust desktop / web / mobile applications.</li>
+    <li><b>C++</b> → real-time control of a CNC mill, embedded firmware.</li>
+    <li><b>Pascal</b> → historical, still didactic for structured programming.</li>
+    <li><b>Fortran</b> → heavy numerical simulations (CFD, FEM) where every microsecond counts.</li>
+  </ul>
+</section>
+
+<!-- ====================== NEURAL NETWORKS ====================== -->
+<section id="t4">
+  <h2>Lesson 4 — Neural-network algorithms in 6 steps</h2>
+  <ol>
+    <li><b>Neuron</b>: <code>output = activation(Σ wᵢ·xᵢ + b)</code></li>
+    <li><b>Layer</b>: many neurons working in parallel.</li>
+    <li><b>Network</b>: layers stacked (input → hidden → output).</li>
+    <li><b>Loss</b>: a number that says "how wrong are we?" — e.g. <code>MSE = mean((y−ŷ)²)</code>.</li>
+    <li><b>Backpropagation</b>: gradient of loss w.r.t. each weight.</li>
+    <li><b>Gradient descent</b>: <code>w ← w − η · ∂L/∂w</code>.</li>
+  </ol>
+  <h3>Minimal NN in Python (Keras)</h3>
+<pre><code>from tensorflow import keras
+import numpy as np
+
+X = np.array([[0,0],[0,1],[1,0],[1,1]])
+y = np.array([0,1,1,0])     # XOR
+
+model = keras.Sequential([
+    keras.layers.Dense(4, activation='relu', input_shape=(2,)),
+    keras.layers.Dense(1, activation='sigmoid')
+])
+model.compile(optimizer='adam', loss='mse')
+model.fit(X, y, epochs=500, verbose=0)
+print(model.predict(X).round())</code></pre>
+
+  <h3>Visual: a 2-2-1 network</h3>
+  <svg viewBox="0 0 400 180" width="100%" style="background:#0b0e1a;border:1px solid var(--border);border-radius:8px">
+    <g stroke="#5cc8ff" stroke-width="1.2">
+      <line x1="60" y1="50"  x2="200" y2="60"/>
+      <line x1="60" y1="50"  x2="200" y2="130"/>
+      <line x1="60" y1="130" x2="200" y2="60"/>
+      <line x1="60" y1="130" x2="200" y2="130"/>
+      <line x1="200" y1="60"  x2="340" y2="90"/>
+      <line x1="200" y1="130" x2="340" y2="90"/>
+    </g>
+    <g fill="#ffb454">
+      <circle cx="60"  cy="50"  r="15"/>
+      <circle cx="60"  cy="130" r="15"/>
+    </g>
+    <g fill="#7ee787">
+      <circle cx="200" cy="60"  r="15"/>
+      <circle cx="200" cy="130" r="15"/>
+    </g>
+    <circle cx="340" cy="90" r="15" fill="#ff7b72"/>
+    <g fill="#e8ecf8" font-size="11" font-family="monospace">
+      <text x="20" y="54">x₁</text><text x="20" y="134">x₂</text>
+      <text x="340" y="120" text-anchor="middle">ŷ</text>
+      <text x="60" y="170" text-anchor="middle">input</text>
+      <text x="200" y="170" text-anchor="middle">hidden</text>
+      <text x="340" y="170" text-anchor="middle">output</text>
+    </g>
+  </svg>
+</section>
+
+<!-- ====================== METAL ====================== -->
+<section id="t5">
+  <h2>Lesson 5 — Metalmechanical applications <span class="pill tag-meta">Metal</span></h2>
+
+  <h3>5.1 — Predict tool wear on a lathe</h3>
+  <p>Inputs: cutting speed v (m/min), feed f (mm/rev), depth d (mm). Output: expected tool life T (min). Train a small NN on workshop data.</p>
+<pre><code>import numpy as np
+from sklearn.neural_network import MLPRegressor
+
+# columns: v, f, d   →   T
+data = np.array([[120,0.2,1.0, 45],
+                 [150,0.3,1.5, 28],
+                 [100,0.1,0.8, 70],
+                 [180,0.4,2.0, 15]])
+X, y = data[:, :3], data[:, 3]
+nn = MLPRegressor(hidden_layer_sizes=(8,), max_iter=5000).fit(X, y)
+print("Predicted T for v=130,f=0.25,d=1.2 →", nn.predict([[130,0.25,1.2]]))</code></pre>
+
+  <h3>5.2 — Tolerance check (pass/fail)</h3>
+  <p>Measured diameter must be 20.00 ± 0.05 mm. Classify a batch of pieces.</p>
+<pre><code>measures = [19.97, 20.02, 20.06, 19.94, 20.00]
+for m in measures:
+    status = "OK" if abs(m-20.0) &lt;= 0.05 else "SCRAP"
+    print(f"{m:.2f} mm → {status}")</code></pre>
+  <button class="run" onclick="demo2()">Run demo</button>
+  <div id="out2" class="out" style="display:none"></div>
+
+  <h3>5.3 — Weld-quality classification (NN)</h3>
+  <p>From current (A), voltage (V), travel speed (cm/min) → good / porous / cracked. A 3-class classifier with a softmax output layer learns from a few hundred labelled welds.</p>
+</section>
+
+<!-- ====================== PHYSICS ====================== -->
+<section id="t6">
+  <h2>Lesson 6 — Physics applications <span class="pill tag-phy">Physics</span></h2>
+
+  <h3>6.1 — Free fall</h3>
+<pre><code>g = 9.81
+for t in range(0, 6):
+    h = 0.5 * g * t**2
+    print(f"t={t}s  fallen={h:.2f} m")</code></pre>
+  <button class="run" onclick="demo3()">Run demo</button>
+  <div id="out3" class="out" style="display:none"></div>
+
+  <h3>6.2 — Simple pendulum period</h3>
+<pre><code>import math
+L = 1.0          # length in metres
+T = 2*math.pi*math.sqrt(L/9.81)
+print(f"Period = {T:.3f} s")     # → 2.006 s</code></pre>
+
+  <h3>6.3 — Ohm's law data fit with a NN</h3>
+  <p>Even if V = R·I is linear, training a 1-neuron network on (I, V) pairs <i>learns</i> R as the weight. Great visual demo of how a network discovers a physical constant.</p>
+<pre><code>import numpy as np
+from sklearn.linear_model import LinearRegression
+I = np.array([[0.1],[0.2],[0.3],[0.4]])
+V = np.array([0.47, 0.95, 1.42, 1.90])
+m = LinearRegression().fit(I, V)
+print("Estimated R =", round(m.coef_[0], 2), "Ω")</code></pre>
+</section>
+
+<!-- ====================== ECONOMY ====================== -->
+<section id="t7">
+  <h2>Lesson 7 — Economy applications <span class="pill tag-eco">Economy</span></h2>
+
+  <h3>7.1 — Daily sales of a small shop</h3>
+<pre><code>sales = {"Mon":420,"Tue":380,"Wed":510,"Thu":460,"Fri":690,"Sat":820,"Sun":0}
+total  = sum(sales.values())
+best   = max(sales, key=sales.get)
+print(f"Week total: €{total}   Best day: {best} (€{sales[best]})")</code></pre>
+  <button class="run" onclick="demo4()">Run demo</button>
+  <div id="out4" class="out" style="display:none"></div>
+
+  <h3>7.2 — Inventory re-order alert</h3>
+<pre><code>stock = {"bread":12,"milk":4,"eggs":30,"butter":2}
+MIN   = 5
+for item, qty in stock.items():
+    if qty &lt; MIN:
+        print(f"⚠ Re-order {item} (only {qty} left)")</code></pre>
+
+  <h3>7.3 — Predict next-month sales with a NN</h3>
+  <p>Inputs: month number, marketing spend, average temperature. Output: forecasted sales in €. A regression NN (1 hidden layer, 16 neurons) is plenty for small shop data and lets students see <i>training loss</i> dropping during <code>model.fit</code>.</p>
+<pre><code>from sklearn.neural_network import MLPRegressor
+import numpy as np
+X = np.array([[1, 200, 8],[2, 250, 10],[3, 300, 14],
+              [4, 280, 18],[5, 320, 22],[6, 400, 27]])
+y = np.array([3200, 3500, 4100, 4600, 5200, 6100])
+nn = MLPRegressor(hidden_layer_sizes=(16,), max_iter=8000).fit(X, y)
+print("July forecast →", round(nn.predict([[7, 420, 30]])[0]), "€")</code></pre>
+</section>
+
+<!-- ====================== QUIZ ====================== -->
+<section id="t8">
+  <h2>Lesson 8 — Quick self-quiz</h2>
+  <div class="quiz" id="quiz"></div>
+  <p id="score" class="sub"></p>
+</section>
+
+<!-- ====================== CHECKLIST ====================== -->
+<section id="t9">
+  <h2>Student checklist · tick as you go</h2>
+  <ul class="check" id="ck">
+    <li>Anaconda installed and Jupyter opens</li>
+    <li>I can run <code>print("hello")</code></li>
+    <li>I can write a <code>for</code> loop with correct indentation</li>
+    <li>I can explain the difference between Python and Java in 2 lines</li>
+    <li>I drew a 2-2-1 neural network on paper</li>
+    <li>I trained the XOR network and it predicts [0,1,1,0]</li>
+    <li>I solved one Metalmechanical example</li>
+    <li>I solved one Physics example</li>
+    <li>I solved one Economy example</li>
+    <li>I can describe gradient descent in one sentence</li>
+  </ul>
+  <p class="sub">Click any item to mark it done.</p>
+</section>
+
+</main>
+
+<footer>Made for technical-school classrooms · single-file HTML, works offline</footer>
+
+<script>
+/* tabs */
+document.querySelectorAll('#nav button').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('#nav button').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+    b.classList.add('active');
+    document.getElementById(b.dataset.tab).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+});
+
+/* mini "Python" demos in JS */
+function show(id, txt){ const e=document.getElementById(id); e.style.display='block'; e.textContent=txt; }
+
+function demo1(){
+  let t=0; for(let i=1;i<=10;i++) t+=i*i;
+  show('out1','Sum = '+t);
+}
+function demo2(){
+  const m=[19.97,20.02,20.06,19.94,20.00];
+  show('out2', m.map(x=>x.toFixed(2)+' mm → '+(Math.abs(x-20)<=0.05?'OK':'SCRAP')).join('\n'));
+}
+function demo3(){
+  let s=''; for(let t=0;t<6;t++) s+=`t=${t}s  fallen=${(0.5*9.81*t*t).toFixed(2)} m\n`;
+  show('out3', s.trim());
+}
+function demo4(){
+  const sales={Mon:420,Tue:380,Wed:510,Thu:460,Fri:690,Sat:820,Sun:0};
+  const total=Object.values(sales).reduce((a,b)=>a+b,0);
+  const best=Object.keys(sales).reduce((a,b)=>sales[a]>sales[b]?a:b);
+  show('out4',`Week total: €${total}   Best day: ${best} (€${sales[best]})`);
+}
+
+/* quiz */
+const Q=[
+ {q:"Which symbol starts a block in Python?", a:["{","( )","Indentation (spaces)","BEGIN"], ok:2},
+ {q:"Which language is best for heavy numerical physics simulations?", a:["Python (pure)","Fortran","HTML","Turbo Pascal"], ok:1},
+ {q:"What does gradient descent change?", a:["The dataset","The weights","The activation function","The CPU"], ok:1},
+ {q:"Anaconda mainly provides…", a:["A web browser","Python + scientific libraries + Jupyter","An operating system","A 3-D printer driver"], ok:1},
+ {q:"In a NN, the loss is…", a:["Speed of training","A number that says how wrong predictions are","The number of layers","The learning rate"], ok:1}
+];
+const qd=document.getElementById('quiz');
+Q.forEach((item,i)=>{
+  const div=document.createElement('div');
+  div.innerHTML=`<p><b>${i+1}. ${item.q}</b></p>`;
+  item.a.forEach((opt,j)=>{
+    const l=document.createElement('label');
+    l.textContent=opt;
+    l.onclick=()=>{
+      l.parentNode.querySelectorAll('label').forEach(x=>x.classList.remove('correct','wrong'));
+      l.classList.add(j===item.ok?'correct':'wrong');
+      score();
+    };
+    div.appendChild(l);
+  });
+  qd.appendChild(div);
+});
+function score(){
+  const ok=document.querySelectorAll('#quiz .correct').length;
+  document.getElementById('score').textContent=`Score: ${ok} / ${Q.length}`;
+}
+
+/* checklist */
+document.querySelectorAll('#ck li').forEach(li=>li.onclick=()=>li.classList.toggle('done'));
+</script>
+</body>
+</html>
