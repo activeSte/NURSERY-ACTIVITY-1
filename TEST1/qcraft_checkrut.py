@@ -5,6 +5,7 @@ Reads student data from Excel, produces pivot summary and output report.
 
 import zipfile
 import xml.etree.ElementTree as ET
+import math
 from pathlib import Path
 from datetime import date
 from collections import defaultdict
@@ -92,62 +93,125 @@ def grade(score):
     if score >= 40: return "MEDIOCRE"
     return "INSUFFICIENTE"
 
+def score_stats(scores):
+    n = len(scores)
+    mean = sum(scores) / n
+    variance = sum((x - mean) ** 2 for x in scores) / n
+    stdev = math.sqrt(variance)
+    sorted_s = sorted(scores)
+    median = sorted_s[n // 2] if n % 2 else (sorted_s[n//2-1] + sorted_s[n//2]) / 2
+    # frequency distribution bands
+    bands = [
+        ("INSUFFICIENTE  [0-39]",  lambda s: s < 40),
+        ("MEDIOCRE      [40-59]",  lambda s: 40 <= s < 60),
+        ("SUFFICIENTE   [60-64]",  lambda s: 60 <= s < 65),
+        ("DISCRETO      [65-74]",  lambda s: 65 <= s < 75),
+        ("BUONO         [75-84]",  lambda s: 75 <= s < 85),
+        ("OTTIMO        [85-100]", lambda s: s >= 85),
+    ]
+    dist = [(label, sum(1 for s in scores if fn(s))) for label, fn in bands]
+    return {"n": n, "mean": mean, "median": median, "stdev": stdev,
+            "min": min(scores), "max": max(scores), "dist": dist}
+
 # ── 3. Report builders ────────────────────────────────────────────────────────
+
+def bar(count, total, width=20):
+    filled = round(width * count / total) if total else 0
+    return "█" * filled + "░" * (width - filled)
 
 def build_txt(students, piv):
     all_scores = [s["score"] for s in students]
+    stats = score_stats(all_scores)
+
+    # ── A: Alphabetical roster ────────────────────────────────────────────────
+    alpha = sorted(students, key=lambda x: x["name"])
     lines = [
         "=" * 68,
         "QCRAFT-CONDCHECKRUT  —  OUTPUT REPORT  —  TEST 1",
-        f"Generated: {date.today().isoformat()}",
+        f"Generated : {date.today().isoformat()}",
+        f"Engine    : Lux Claude Code (LCC)",
         "=" * 68,
         "",
-        "QUEST : QUOTE E SCRITTURA / DESIGNAZIONE FILETTATURE / LINGUETTE",
-        "ROLE  : Lux Claude Code (LCC)",
-        "TYPE  : LINGUETTE E CHIAVETTE",
-        "",
         "─" * 68,
-        "PIVOT SUMMARY BY TOPIC",
-        "─" * 68,
-    ]
-    for topic, stat in piv.items():
-        lines += [
-            f"\n  {topic}",
-            f"  {'Students':12s} {stat['count']}",
-            f"  {'Mean':12s} {stat['mean']:.1f}",
-            f"  {'Min':12s} {stat['min']:.0f}",
-            f"  {'Max':12s} {stat['max']:.0f}",
-            f"  {'Pass (≥60)':12s} {stat['pass']}  |  Fail: {stat['fail']}",
-        ]
-
-    lines += [
-        "",
-        "─" * 68,
-        "RANKING — ALL STUDENTS",
+        "SECTION A — NOMINATIVO  (alphabetical order)",
         "─" * 68,
         f"  {'#':<4}{'ID':<5}{'NAME':<18}{'SCORE':>6}  {'GRADE':<14}  TOPIC",
     ]
-    ranked = sorted(students, key=lambda x: -x["score"])
-    for i, s in enumerate(ranked, 1):
+    for i, s in enumerate(alpha, 1):
         lines.append(
             f"  {i:<4}{s['id']:<5}{s['name']:<18}{s['score']:>6.0f}  "
             f"{grade(s['score']):<14}  {s['topic']}"
         )
 
+    # ── B: Score / VOTO elaboration ───────────────────────────────────────────
+    ranked = sorted(students, key=lambda x: -x["score"])
     lines += [
         "",
         "─" * 68,
-        "OVERALL KPIs",
+        "SECTION B — VOTO ELABORATION",
         "─" * 68,
-        f"  Total students : {len(students)}",
-        f"  Overall mean   : {sum(all_scores)/len(all_scores):.1f} / 100",
-        f"  Pass rate      : {sum(1 for sc in all_scores if sc >= 60)}/{len(all_scores)} "
-        f"({100*sum(1 for sc in all_scores if sc >= 60)/len(all_scores):.0f}%)",
-        f"  Top scorer     : {ranked[0]['name']}  [{ranked[0]['score']:.0f}]",
-        f"  Lowest scorer  : {ranked[-1]['name']}  [{ranked[-1]['score']:.0f}]",
+        "",
+        "  B1. Descriptive Statistics — all 21 students",
+        f"      Mean        : {stats['mean']:.2f} / 100",
+        f"      Median      : {stats['median']:.1f} / 100",
+        f"      Std Dev     : {stats['stdev']:.2f}",
+        f"      Min / Max   : {stats['min']:.0f} / {stats['max']:.0f}",
+        f"      Pass (≥60)  : {sum(1 for sc in all_scores if sc >= 60)} / {stats['n']}"
+        f"  ({100*sum(1 for sc in all_scores if sc >= 60)/stats['n']:.0f}%)",
+        f"      Fail (<60)  : {sum(1 for sc in all_scores if sc < 60)} / {stats['n']}",
+        "",
+        "  B2. Frequency Distribution",
+        f"  {'BAND':<26} {'N':>3}  HISTOGRAM",
+    ]
+    for label, count in stats["dist"]:
+        lines.append(f"  {label:<26} {count:>3}  {bar(count, stats['n'])} "
+                     f"({100*count/stats['n']:.0f}%)")
+
+    lines += [
+        "",
+        "  B3. Per-Topic Statistics",
+        f"  {'TOPIC':<30} {'N':>3}  {'MEAN':>6}  {'MED':>5}  {'σ':>5}  PASS",
+    ]
+    for topic, stat in piv.items():
+        ts = score_stats([s["score"] for s in stat["students"]])
+        lines.append(
+            f"  {topic:<30} {ts['n']:>3}  {ts['mean']:>6.1f}  "
+            f"{ts['median']:>5.1f}  {ts['stdev']:>5.2f}  "
+            f"{stat['pass']}/{ts['n']}"
+        )
+
+    lines += [
+        "",
+        "  B4. Ranking by VOTO (descending)",
+        f"  {'RK':<4}{'NAME':<18}{'SCORE':>6}  {'GRADE':<14}  TOPIC",
+    ]
+    for i, s in enumerate(ranked, 1):
+        lines.append(
+            f"  {i:<4}{s['name']:<18}{s['score']:>6.0f}  "
+            f"{grade(s['score']):<14}  {s['topic']}"
+        )
+
+    # ── C: KPI dashboard ──────────────────────────────────────────────────────
+    best_topic = max(piv, key=lambda t: piv[t]["mean"])
+    weak_topic = min(piv, key=lambda t: piv[t]["mean"])
+    lines += [
+        "",
+        "─" * 68,
+        "SECTION C — KPI DASHBOARD",
+        "─" * 68,
+        f"  Total students   : {stats['n']}",
+        f"  Overall mean     : {stats['mean']:.1f} / 100",
+        f"  Overall median   : {stats['median']:.1f} / 100",
+        f"  Std deviation    : {stats['stdev']:.2f}  (spread indicator)",
+        f"  Pass rate        : {sum(1 for sc in all_scores if sc >= 60)}/{stats['n']}"
+        f"  ({100*sum(1 for sc in all_scores if sc >= 60)/stats['n']:.0f}%)",
+        f"  Top scorer       : {ranked[0]['name']}  [{ranked[0]['score']:.0f}]",
+        f"  Lowest scorer    : {ranked[-1]['name']}  [{ranked[-1]['score']:.0f}]",
+        f"  Strongest topic  : {best_topic}  (mean {piv[best_topic]['mean']:.1f})",
+        f"  Weakest topic    : {weak_topic}  (mean {piv[weak_topic]['mean']:.1f})",
         "",
         "=" * 68,
-        "END OF REPORT  —  QCRAFT-CONDCHECKRUT / RUT: R-U-T",
+        "END OF REPORT  —  QCRAFT-CONDCHECKRUT / RUT: R-U-T  —  LCC",
         "=" * 68,
     ]
     return "\n".join(lines)
