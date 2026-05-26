@@ -1,2 +1,6 @@
 # Google App Engine generated folder
 appengine-generated/
+
+# TEST data — student names and scores are private, stay local only
+TEST1/output/
+TEST1/source/
