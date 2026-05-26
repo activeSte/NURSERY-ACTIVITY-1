@@ -1,0 +1,72 @@
+====================================================================
+QCRAFT-CONDCHECKRUT  —  OUTPUT REPORT  —  TEST 1
+Generated: 2026-05-26
+====================================================================
+
+QUEST : QUOTE E SCRITTURA / DESIGNAZIONE FILETTATURE / LINGUETTE
+ROLE  : Lux Claude Code (LCC)
+TYPE  : LINGUETTE E CHIAVETTE
+
+────────────────────────────────────────────────────────────────────
+PIVOT SUMMARY BY TOPIC
+────────────────────────────────────────────────────────────────────
+
+  DESIGNAZIONE FILETTATURE
+  Students     7
+  Mean         65.0
+  Min          60
+  Max          70
+  Pass (≥60)   7  |  Fail: 0
+
+  LINGUETTE E CHIAVETTE
+  Students     8
+  Mean         56.2
+  Min          20
+  Max          75
+  Pass (≥60)   6  |  Fail: 2
+
+  QUOTE E SCRITTURA
+  Students     6
+  Mean         70.0
+  Min          60
+  Max          85
+  Pass (≥60)   6  |  Fail: 0
+
+────────────────────────────────────────────────────────────────────
+RANKING — ALL STUDENTS
+────────────────────────────────────────────────────────────────────
+  #   ID   NAME               SCORE  GRADE           TOPIC
+  1   1    AL KHALES             85  OTTIMO          QUOTE E SCRITTURA
+  2   6    CAPPELLARI            85  OTTIMO          QUOTE E SCRITTURA
+  3   18   SAVOINI               75  BUONO           LINGUETTE E CHIAVETTE
+  4   10   LOMBARDO              70  DISCRETO        DESIGNAZIONE FILETTATURE
+  5   12   VOLTA                 70  DISCRETO        DESIGNAZIONE FILETTATURE
+  6   13   LAMI                  70  DISCRETO        DESIGNAZIONE FILETTATURE
+  7   15   FALVO                 70  DISCRETO        LINGUETTE E CHIAVETTE
+  8   2    COLOMBARA             65  DISCRETO        QUOTE E SCRITTURA
+  9   4    SERESIN               65  DISCRETO        QUOTE E SCRITTURA
+  10  11   QUIRICO               65  DISCRETO        DESIGNAZIONE FILETTATURE
+  11  19   BERGAMINI             65  DISCRETO        LINGUETTE E CHIAVETTE
+  12  3    ENGLER                60  SUFFICIENTE     QUOTE E SCRITTURA
+  13  5    PAESANTI              60  SUFFICIENTE     QUOTE E SCRITTURA
+  14  7    BERTALLI              60  SUFFICIENTE     DESIGNAZIONE FILETTATURE
+  15  8    BERTONA               60  SUFFICIENTE     DESIGNAZIONE FILETTATURE
+  16  9    TROVATO               60  SUFFICIENTE     DESIGNAZIONE FILETTATURE
+  17  17   PASSERINI             60  SUFFICIENTE     LINGUETTE E CHIAVETTE
+  18  20   CONTILLO              60  SUFFICIENTE     LINGUETTE E CHIAVETTE
+  19  21   GUEYE                 60  SUFFICIENTE     LINGUETTE E CHIAVETTE
+  20  14   LAAL                  40  MEDIOCRE        LINGUETTE E CHIAVETTE
+  21  16   CAZACU                20  INSUFFICIENTE   LINGUETTE E CHIAVETTE
+
+────────────────────────────────────────────────────────────────────
+OVERALL KPIs
+────────────────────────────────────────────────────────────────────
+  Total students : 21
+  Overall mean   : 63.1 / 100
+  Pass rate      : 19/21 (90%)
+  Top scorer     : AL KHALES  [85]
+  Lowest scorer  : CAZACU  [20]
+
+====================================================================
+END OF REPORT  —  QCRAFT-CONDCHECKRUT / RUT: R-U-T
+====================================================================
