@@ -9,7 +9,7 @@
 function doGet() {
   return HtmlService.createHtmlOutputFromFile('WebApp')
     .setTitle('Cassy — Personal Assistant')
-    .setXFrameOptions(HtmlService.XFrameOptionsMode.ALLOWALL);
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
 /** State snapshot for the panel. */
@@ -44,4 +44,27 @@ function cassyUiRun(routine) {
     case 'weeklyHygiene':return cassyWeeklyHygiene();
     default: throw new Error('Unknown routine: ' + routine);
   }
+}
+
+/** Chat/ask handler — routes natural language to existing routines. */
+function cassyUiChat(text) {
+  const q = (text || '').toLowerCase().trim();
+  if (!q || q === 'help' || q === '?') return cassyHelp_();
+  if (/morning|brief/.test(q))              return cassyMorningBrief();
+  if (/triage|inbox/.test(q))               return JSON.stringify(cassyInboxTriage());
+  if (/calendar|guard|conflict/.test(q))    return JSON.stringify(cassyCalendarGuard());
+  if (/wrap|eod|end.of.day/.test(q))        return cassyEndOfDayWrap();
+  if (/hygiene|crm|weekly/.test(q))         return cassyWeeklyHygiene();
+  return cassyHelp_();
+}
+
+function cassyHelp_() {
+  return 'Cassy can:\n' +
+    '• Morning Brief   — daily email + task summary (07:30 GMT)\n' +
+    '• Inbox Triage    — label urgent/fyi, draft holding replies\n' +
+    '• Calendar Guard  — detect conflicts in next 7 days\n' +
+    '• End-of-Day Wrap — summary of what Cassy did today (18:30 GMT)\n' +
+    '• Weekly Hygiene  — stale deals + CRM nudges (Mon 08:00 GMT)\n\n' +
+    'Type any keyword above, or use the Run buttons.\n' +
+    'Example: "morning brief", "inbox", "calendar", "wrap", "hygiene"';
 }
