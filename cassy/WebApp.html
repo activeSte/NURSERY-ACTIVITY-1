@@ -100,6 +100,26 @@
     </div>
 
     <div class="card">
+      <h2>Runbook generator (Gemini)</h2>
+      <textarea id="rbGoals" rows="2" placeholder="What should Cassy focus on? e.g. triage client RFPs, draft thank-yous, sync PEC deadlines"
+                style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--line);font-size:13px;font-family:inherit;resize:vertical"></textarea>
+      <div class="grid" style="margin-top:8px">
+        <input id="rbTz" type="text" value="Etc/GMT"
+               style="padding:8px 10px;border-radius:8px;border:1px solid var(--line);font-size:13px">
+        <input id="rbDelivery" type="text" value="Gmail digest + Sheet log"
+               style="padding:8px 10px;border-radius:8px;border:1px solid var(--line);font-size:13px">
+      </div>
+      <button class="run" style="margin-top:8px;width:100%" onclick="runbook()">Generate runbook</button>
+      <p class="muted">Falls back to the fixed schedule if no Gemini key is set.</p>
+    </div>
+
+    <div class="card">
+      <h2>BMS diagnostics</h2>
+      <button onclick="diag()">Refresh diagnostics</button>
+      <div id="diag" class="muted" style="margin-top:10px">—</div>
+    </div>
+
+    <div class="card">
       <h2>Output</h2>
       <div id="log">Ready. Type a question above or click a routine button.</div>
     </div>
@@ -138,6 +158,43 @@
       if (!q) return;
       log('Asking Cassy: "' + q + '" …');
       google.script.run.withSuccessHandler(function(r){ log(r); }).withFailureHandler(fail).cassyUiChat(q);
+    }
+
+    function runbook(){
+      var goals = document.getElementById('rbGoals').value.trim();
+      var tz = document.getElementById('rbTz').value.trim();
+      var del = document.getElementById('rbDelivery').value.trim();
+      log('Generating runbook…');
+      google.script.run.withSuccessHandler(log).withFailureHandler(fail).cassyUiRunbook(goals, tz, del);
+    }
+
+    function diag(){
+      var el = document.getElementById('diag'); el.textContent = 'Loading…';
+      google.script.run.withSuccessHandler(renderDiag).withFailureHandler(function(e){ el.textContent='ERROR: '+e.message; }).cassyUiDiagnostics();
+    }
+    function renderDiag(d){
+      var k = d.kpis;
+      var html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px">'
+        + kpiBox('Active channels', k.activeChannels)
+        + kpiBox('Triggers', k.triggers)
+        + kpiBox('Actions today', k.actionsToday)
+        + kpiBox('Gemini', k.gemini)
+        + kpiBox('Timezone', k.tz)
+        + kpiBox('Language', k.lang)
+        + '</div>';
+      html += '<div style="font-weight:600;color:var(--soft);margin:8px 0 4px">PMAT agents</div>';
+      d.pmat.forEach(function(a){
+        var col = a.status==='off' ? 'var(--off)' : (a.status==='active'||a.status==='armed'||a.status==='ready' ? 'var(--ok)' : 'var(--soft)');
+        html += '<div class="row" style="padding:4px 0"><span>'+a.name+' · <span style="color:var(--soft)">'+a.role+'</span></span>'
+              + '<span class="pill" style="background:#f3f4f6;color:'+col+'">'+a.status+'</span></div>';
+      });
+      html += '<div style="margin-top:8px;font-size:11px;color:var(--soft)">Grafcet: '+d.grafcet.join(' → ')+'</div>';
+      document.getElementById('diag').innerHTML = html;
+    }
+    function kpiBox(label, val){
+      return '<div style="background:#f7f9fb;border:1px solid var(--line);border-radius:8px;padding:8px">'
+           + '<div style="font-size:10px;text-transform:uppercase;color:var(--soft)">'+label+'</div>'
+           + '<div style="font-weight:700;font-size:13px;color:var(--ink)">'+val+'</div></div>';
     }
 
     function refresh(){ google.script.run.withSuccessHandler(render).withFailureHandler(fail).cassyState(); }

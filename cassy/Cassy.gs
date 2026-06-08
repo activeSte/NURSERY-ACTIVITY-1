@@ -111,12 +111,11 @@ function cassyInboxTriage() {
     else { t.addLabel(fyiLabel); nFyi++; }
 
     // Draft a courteous holding reply for urgent threads — NEVER auto-send.
+    // Uses Gemini for a context-aware draft if configured (see Gemini.gs),
+    // otherwise a safe generic holding message.
     if (Cassy_looksUrgent_(t) && CASSY_canCompose_()) {
       const msg = t.getMessages()[0];
-      const draftBody =
-        'Hi,\n\nThanks for your message — Cassy (assistant to ' + CASSY.owner +
-        ') has flagged this as time-sensitive and ' +
-        CASSY.owner + ' will reply shortly.\n\n— Sent on behalf, pending review.';
+      const draftBody = Cassy_smartDraftBody_(t);
       msg.createDraftReply(draftBody);
       nDrafts++;
     }

@@ -21,10 +21,19 @@ from the Gmail environment, and speaks **7 languages** (default English).
 | `RUNBOOK.md` | The one-page "what Cassy does and when" |
 | `appsscript.json` | Manifest, minimal OAuth scopes, web-app config (GMT timezone) |
 | `Cassy.gs` | The 5 routines + delivery + consent helpers (reuses `Ethics`, `audit`) |
+| `Gemini.gs` | **v2** — Gemini bridge: smart draft replies, runbook generator, BMS diagnostics |
 | `Triggers.gs` | `installCassyTriggers()` / `removeCassyTriggers()` (recurring schedule) |
 | `i18n.gs` | Language ruler EN/IT/DE/ZH/JA/FR/HI |
-| `WebApp.gs` + `WebApp.html` | Control panel (consent, lang, run-now, install) |
+| `WebApp.gs` + `WebApp.html` | Control panel (consent, lang, run-now, install, Ask Cassy, runbook, diagnostics) |
 | `config.example.json` | Reference config (owner, TZ, channels, delivery, guardrails, bridges) |
+
+## v2 — AI features (Gemini, opt-in)
+Set `GEMINI_API_KEY` in **Project Settings → Script Properties** (optional `GEMINI_MODEL`,
+default `gemini-2.5-flash`). With no key, every feature falls back to safe self-contained behaviour.
+1. **Smart draft replies** — `cassyInboxTriage` drafts context-aware holding replies (still never auto-sends).
+2. **Runbook generator** — `cassyGenerateRunbook(goals, tz, delivery)` → Gemini schedule, or static fallback.
+3. **BMS diagnostics** — `cassyDiagnostics()` → KPIs + PMAT agent map + Grafcet, shown in the panel.
+Gemini is the only outbound external call; it needs the `script.external_request` scope and is gated by the key.
 
 ## Reused from `crm/` (unchanged)
 - `Ethics.assertConsent` / `withinRateLimit` / `redactPII` — `crm/Ethics.gs`
