@@ -130,9 +130,17 @@ function toggleConsent() {
 /* ------------------------------------------------------------------ */
 
 function audit(action, target, detail) {
-  const sh = SpreadsheetApp.getActive().getSheetByName(TABS.audit);
-  if (!sh) return;
-  sh.appendRow([new Date(), Session.getActiveUser().getEmail(), action, target, detail || '']);
+  try {
+    const ss = SpreadsheetApp.getActive();
+    if (!ss) return;
+    const sh = ss.getSheetByName(TABS.audit);
+    if (!sh) return;
+    let user = '';
+    try { user = Session.getActiveUser().getEmail() || ''; } catch (e) { user = ''; }
+    sh.appendRow([new Date(), user, action, target, detail || '']);
+  } catch (e) {
+    // Never let audit logging break a routine (e.g. Gmail Add-on sandbox).
+  }
 }
 
 function extractThreadId_(s) {
