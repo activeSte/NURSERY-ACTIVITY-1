@@ -9,7 +9,7 @@
  * Then in the Manage deployments dialog click "Install" to side-load it into your Gmail.
  */
 
-const CASSY_AVATAR = 'https://drive.google.com/thumbnail?id=1uUBFwImGEeqNDGF_bUF7WXJQIFvppNMB&sz=w240';
+const ADDON_IMG_ = 'https://drive.google.com/thumbnail?id=1uUBFwImGEeqNDGF_bUF7WXJQIFvppNMB&sz=w240';
 
 /* ── Entry points ── */
 
@@ -29,7 +29,7 @@ function buildCassyCard_(e) {
       CardService.newCardHeader()
         .setTitle('Cassy')
         .setSubtitle('Ethics-first personal assistant')
-        .setImageUrl(CASSY_AVATAR)
+        .setImageUrl(ADDON_IMG_)
         .setImageStyle(CardService.ImageStyle.CIRCLE)
     );
 
