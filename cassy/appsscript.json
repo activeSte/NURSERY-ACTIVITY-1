@@ -12,6 +12,26 @@
     "executeAs": "USER_DEPLOYING",
     "access": "MYSELF"
   },
+  "addOns": {
+    "common": {
+      "name": "Cassy",
+      "logoUrl": "https://drive.google.com/thumbnail?id=1uUBFwImGEeqNDGF_bUF7WXJQIFvppNMB&sz=w240",
+      "homepageTrigger": {
+        "runFunction": "cassyGmailHomepage"
+      }
+    },
+    "gmail": {
+      "homepageTrigger": {
+        "runFunction": "cassyGmailHomepage"
+      },
+      "contextualTriggers": [
+        {
+          "unconditional": {},
+          "onTriggerFunction": "cassyGmailContextual"
+        }
+      ]
+    }
+  },
   "oauthScopes": [
     "https://www.googleapis.com/auth/spreadsheets.currentonly",
     "https://www.googleapis.com/auth/gmail.modify",
