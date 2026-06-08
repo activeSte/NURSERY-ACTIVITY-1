@@ -4,207 +4,406 @@
   <base target="_top">
   <meta charset="utf-8">
   <style>
-    :root { --ink:#1f2933; --soft:#52606d; --line:#e4e7eb; --ok:#0b804b; --off:#9aa5b1; --bg:#f7f9fb; }
+    :root {
+      --ink:#1f2933; --soft:#52606d; --line:#e4e7eb;
+      --ok:#0b804b;  --off:#9aa5b1;  --bg:#f7f9fb;
+      --teal:#0d3b44; --mint:#b3efd3;
+    }
     * { box-sizing: border-box; }
-    body { font-family: -apple-system, Segoe UI, Roboto, sans-serif; color: var(--ink);
-           margin: 0; background: var(--bg); }
-    header { background: #0d3b44; color: #fff; padding: 16px 20px; display:flex;
-             align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }
-    .hd-brand { display:flex; align-items:center; gap:12px; }
-    header h1 { font-size: 18px; margin: 0; }
-    header .tag { font-size: 12px; opacity: .85; }
-    main { max-width: 760px; margin: 0 auto; padding: 18px; }
-    .card { background:#fff; border:1px solid var(--line); border-radius:10px;
+    body { font-family: -apple-system, Segoe UI, Roboto, sans-serif;
+           color: var(--ink); margin: 0; background: var(--bg); }
+
+    /* ── Header ── */
+    header { background: var(--teal); color: #fff; padding: 14px 20px;
+             display:flex; align-items:center; justify-content:space-between;
+             flex-wrap:wrap; gap:8px; }
+    .hd-brand { display:flex; align-items:center; gap:14px; }
+    .hd-brand h1 { font-size:18px; margin:0; letter-spacing:-.01em; }
+    .hd-brand .sub { font-size:11px; opacity:.8; margin-top:2px; }
+    header .ctrl { display:flex; align-items:center; gap:8px; font-size:12px; opacity:.9; }
+    select { padding:5px 8px; border-radius:8px; border:1px solid rgba(255,255,255,.3);
+             background:rgba(255,255,255,.12); color:#fff; font-size:12px; cursor:pointer; }
+    select option { color: var(--ink); background:#fff; }
+
+    /* ── Layout ── */
+    main { max-width:780px; margin:0 auto; padding:18px; }
+
+    /* ── Cards ── */
+    .card { background:#fff; border:1px solid var(--line); border-radius:12px;
             padding:14px 16px; margin-bottom:14px; }
-    .card h2 { font-size: 14px; margin: 0 0 10px; text-transform: uppercase;
-               letter-spacing:.04em; color: var(--soft); }
+    .card h2 { font-size:12px; margin:0 0 10px; text-transform:uppercase;
+               letter-spacing:.06em; color:var(--soft); display:flex;
+               align-items:center; gap:6px; }
+    .card h2 .badge { font-size:10px; background:#e8f4ff; color:#2563eb;
+                      border-radius:4px; padding:1px 6px; text-transform:none;
+                      letter-spacing:0; }
+
+    /* ── Rows / pills ── */
     .row { display:flex; align-items:center; justify-content:space-between;
            padding:6px 0; border-bottom:1px dashed var(--line); }
     .row:last-child { border-bottom:0; }
-    button { border:1px solid var(--line); background:#fff; border-radius:8px;
-             padding:6px 12px; cursor:pointer; font-size:13px; }
-    button:hover { border-color:#0d3b44; }
-    button.run { background:#0d3b44; color:#fff; border-color:#0d3b44; }
     .pill { font-size:11px; padding:2px 8px; border-radius:999px; }
-    .pill.on { background:#b3efd3; color:var(--ok); }
-    .pill.off{ background:#f3f4f6; color:var(--off); }
-    select { padding:6px 8px; border-radius:8px; border:1px solid var(--line); }
-    #log { font-family: ui-monospace, monospace; font-size:12px; white-space:pre-wrap;
-           background:#0d3b44; color:#b3efd3; border-radius:8px; padding:12px; min-height:60px; }
+    .pill.on  { background:#b3efd3; color:var(--ok); }
+    .pill.off { background:#f3f4f6; color:var(--off); }
+    .pill.ide { background:#e8f4ff; color:#2563eb; }
+
+    /* ── Buttons ── */
+    button { border:1px solid var(--line); background:#fff; border-radius:8px;
+             padding:6px 12px; cursor:pointer; font-size:13px; transition:all .15s; }
+    button:hover { border-color:var(--teal); }
+    button.run { background:var(--teal); color:#fff; border-color:var(--teal); }
+    button.run:hover { background:#0b4f5e; }
+    button.ide-btn { background:#1d4ed8; color:#fff; border-color:#1d4ed8; }
+    button.ide-btn:hover { background:#1e40af; }
+
+    /* ── Grids ── */
     .grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-    .muted { color:var(--soft); font-size:12px; }
+    .grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+
+    /* ── Inputs ── */
+    .inp { width:100%; padding:8px 10px; border-radius:8px;
+           border:1px solid var(--line); font-size:13px;
+           font-family:inherit; background:#fff; }
+    .inp:focus { outline:none; border-color:var(--teal); }
+    textarea.inp { resize:vertical; }
+
+    /* ── Chat row ── */
     .chat-row { display:flex; gap:8px; }
-    .chat-row input { flex:1; padding:8px 10px; border-radius:8px;
-                      border:1px solid var(--line); font-size:13px; font-family:inherit; }
-    .chat-row input:focus { outline:none; border-color:#0d3b44; }
+    .chat-row .inp { flex:1; }
+
+    /* ── Output log ── */
+    #log { font-family:ui-monospace, monospace; font-size:12px;
+           white-space:pre-wrap; background:var(--teal); color:var(--mint);
+           border-radius:10px; padding:14px; min-height:70px; }
+
+    /* ── Diagnostics ── */
+    .kpi-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:12px; }
+    .kpi-box { background:#f7f9fb; border:1px solid var(--line); border-radius:8px; padding:10px; }
+    .kpi-box .kpi-label { font-size:10px; text-transform:uppercase; color:var(--soft); }
+    .kpi-box .kpi-val   { font-weight:700; font-size:13px; color:var(--ink); margin-top:2px; }
+
+    /* ── IDE panel ── */
+    .ide-tasks { max-height:140px; overflow-y:auto; margin:10px 0; }
+    .ide-task  { background:#f0f9ff; border:1px solid #bae6fd; border-radius:8px;
+                 padding:8px 10px; margin-bottom:6px; font-size:12px; }
+    .ide-task strong { color:#0369a1; }
+
+    .muted { color:var(--soft); font-size:11px; margin-top:6px; }
   </style>
 </head>
 <body>
-  <header>
-    <div class="hd-brand">
-      <!-- SVG avatar: mint circle · dark-teal "C" · white sparkle -->
-      <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <circle cx="21" cy="21" r="21" fill="#b3efd3"/>
-        <text x="21" y="28" text-anchor="middle"
-              font-family="-apple-system,Segoe UI,Roboto,sans-serif"
-              font-size="22" font-weight="700" fill="#0d3b44">C</text>
-        <circle cx="34" cy="8" r="3.5" fill="#fff"/>
-      </svg>
-      <div>
-        <h1>Cassy</h1>
-        <div class="tag" id="tagline">Your ethics-first personal assistant</div>
-      </div>
-    </div>
+
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<header>
+  <div class="hd-brand">
+
+    <!-- Cassy Avatar SVG -->
+    <svg width="52" height="52" viewBox="0 0 52 52" fill="none"
+         xmlns="http://www.w3.org/2000/svg" aria-label="Cassy avatar">
+      <!-- Outer glow -->
+      <circle cx="26" cy="26" r="26" fill="#b3efd3" opacity="0.3"/>
+      <!-- Main circle -->
+      <circle cx="26" cy="26" r="23" fill="#b3efd3"/>
+      <!-- Shoulders -->
+      <ellipse cx="26" cy="46" rx="13" ry="9" fill="#0d3b44"/>
+      <!-- Head -->
+      <circle cx="26" cy="21" r="13" fill="#0d3b44"/>
+      <!-- Hair -->
+      <path d="M 13 18 C 13 7 39 7 39 18" fill="#0a2535"/>
+      <!-- Face area (lighter) -->
+      <ellipse cx="26" cy="22" rx="9" ry="10" fill="#155e75"/>
+      <!-- Eyes — AI rectangle style -->
+      <rect x="19" y="18" width="5" height="7" rx="2.5" fill="#b3efd3"/>
+      <rect x="28" y="18" width="5" height="7" rx="2.5" fill="#b3efd3"/>
+      <!-- Eye inner glow -->
+      <rect x="20.5" y="19.5" width="2" height="4" rx="1" fill="white" opacity="0.55"/>
+      <rect x="29.5" y="19.5" width="2" height="4" rx="1" fill="white" opacity="0.55"/>
+      <!-- Smile -->
+      <path d="M 20 28 Q 26 33 32 28"
+            stroke="#b3efd3" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <!-- Sparkle star (top-right) -->
+      <path d="M 40 9 L 41.3 12.2 L 44.5 13.5 L 41.3 14.8 L 40 18 L 38.7 14.8 L 35.5 13.5 L 38.7 12.2 Z"
+            fill="white"/>
+    </svg>
+
     <div>
-      <label class="tag">Lang</label>
-      <select id="lang" onchange="setLang()"></select>
-      <span class="tag" id="tz"></span>
+      <h1>Cassy</h1>
+      <div class="sub" id="tagline">Your ethics-first personal assistant</div>
     </div>
-  </header>
+  </div>
 
-  <main>
-    <div class="card">
-      <h2>Ask Cassy</h2>
-      <div class="chat-row">
-        <input id="chatInput" type="text"
-               placeholder="e.g. morning brief · inbox triage · help"
-               onkeydown="if(event.key==='Enter')chat()">
-        <button class="run" onclick="chat()">Ask</button>
-      </div>
+  <div class="ctrl">
+    <span id="ide-status" style="display:none" class="pill ide">● Antigravity IDE</span>
+    <label>Lang</label>
+    <select id="lang" onchange="setLang()"></select>
+    <span id="tz" style="opacity:.7"></span>
+  </div>
+</header>
+
+<!-- ═══════════════════ MAIN ═══════════════════ -->
+<main>
+
+  <!-- 1. Ask Cassy (chat) -->
+  <div class="card">
+    <h2>Ask Cassy <span class="badge">AI chat</span></h2>
+    <div class="chat-row">
+      <input id="chatInput" class="inp" type="text"
+             placeholder="e.g. morning brief · inbox · status · runbook triage RFPs · help"
+             onkeydown="if(event.key==='Enter')chat()">
+      <button class="run" onclick="chat()">Ask</button>
     </div>
+  </div>
 
-    <div class="card">
-      <h2>Channels (consent — default OFF)</h2>
-      <div id="channels"></div>
-      <p class="muted">Read-only by default. Outbound sends / external invites / deletes always require explicit approval. Aruba PEC is never auto-actioned.</p>
+  <!-- 2. Channels -->
+  <div class="card">
+    <h2>Channels <span style="font-size:10px;font-weight:400;text-transform:none;letter-spacing:0;color:var(--soft)">— consent, default OFF</span></h2>
+    <div id="channels"></div>
+    <p class="muted">Read-only by default. Outbound sends / external invites / deletes always require explicit approval. Aruba PEC is never auto-actioned.</p>
+  </div>
+
+  <!-- 3. Run a routine -->
+  <div class="card">
+    <h2>Run a routine now</h2>
+    <div class="grid">
+      <button class="run" onclick="run('morningBrief')">Morning Brief</button>
+      <button class="run" onclick="run('inboxTriage')">Inbox Triage</button>
+      <button class="run" onclick="run('calendarGuard')">Calendar Guard</button>
+      <button class="run" onclick="run('eodWrap')">End-of-Day Wrap</button>
+      <button class="run" onclick="run('weeklyHygiene')">Weekly Hygiene</button>
     </div>
+  </div>
 
-    <div class="card">
-      <h2>Run a routine now</h2>
-      <div class="grid">
-        <button class="run" onclick="run('morningBrief')">Morning Brief</button>
-        <button class="run" onclick="run('inboxTriage')">Inbox Triage</button>
-        <button class="run" onclick="run('calendarGuard')">Calendar Guard</button>
-        <button class="run" onclick="run('eodWrap')">End-of-Day Wrap</button>
-        <button class="run" onclick="run('weeklyHygiene')">Weekly Hygiene</button>
-      </div>
+  <!-- 4. Recurring schedule -->
+  <div class="card">
+    <h2>Recurring schedule (GMT)</h2>
+    <div class="row"><span>Triggers installed</span><span id="trig" class="pill off">none</span></div>
+    <div class="grid" style="margin-top:8px">
+      <button onclick="install()">Install triggers</button>
+      <button onclick="removeT()">Remove triggers</button>
     </div>
+  </div>
 
-    <div class="card">
-      <h2>Recurring schedule (GMT)</h2>
-      <div class="row"><span>Triggers installed</span><span id="trig" class="pill off">none</span></div>
-      <div class="grid" style="margin-top:8px">
-        <button onclick="install()">Install triggers</button>
-        <button onclick="removeT()">Remove triggers</button>
-      </div>
+  <!-- 5. Runbook generator -->
+  <div class="card">
+    <h2>Runbook generator <span class="badge">Gemini</span></h2>
+    <textarea id="rbGoals" class="inp" rows="2"
+      placeholder="What should Cassy focus on? e.g. triage client RFPs, draft thank-yous, sync PEC deadlines, flag calendar overlaps"></textarea>
+    <div class="grid" style="margin-top:8px">
+      <input id="rbTz"       class="inp" type="text" value="Etc/GMT"             placeholder="Timezone">
+      <input id="rbDelivery" class="inp" type="text" value="Gmail digest + Sheet" placeholder="Delivery">
     </div>
+    <button class="run" style="margin-top:8px;width:100%" onclick="runbook()">Generate runbook</button>
+    <p class="muted">Uses Gemini if GEMINI_API_KEY is set; falls back to the fixed schedule otherwise.</p>
+  </div>
 
-    <div class="card">
-      <h2>Runbook generator (Gemini)</h2>
-      <textarea id="rbGoals" rows="2" placeholder="What should Cassy focus on? e.g. triage client RFPs, draft thank-yous, sync PEC deadlines"
-                style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--line);font-size:13px;font-family:inherit;resize:vertical"></textarea>
-      <div class="grid" style="margin-top:8px">
-        <input id="rbTz" type="text" value="Etc/GMT"
-               style="padding:8px 10px;border-radius:8px;border:1px solid var(--line);font-size:13px">
-        <input id="rbDelivery" type="text" value="Gmail digest + Sheet log"
-               style="padding:8px 10px;border-radius:8px;border:1px solid var(--line);font-size:13px">
-      </div>
-      <button class="run" style="margin-top:8px;width:100%" onclick="runbook()">Generate runbook</button>
-      <p class="muted">Falls back to the fixed schedule if no Gemini key is set.</p>
+  <!-- 6. Antigravity IDE -->
+  <div class="card">
+    <h2>Antigravity IDE <span class="badge">Coordinators Hub</span></h2>
+    <p class="muted" style="margin:0 0 10px">Shared workspace with the BMS Coordinators Team (AI Assistants). Requires ANTIGRAVITY_SHEET_ID in Script Properties.</p>
+    <div class="grid3" style="margin-bottom:10px">
+      <button class="ide-btn" onclick="ideCheckin()">Check-in</button>
+      <button onclick="ideSetup()">Init hub tabs</button>
+      <button onclick="idePost()">Post to hub</button>
     </div>
-
-    <div class="card">
-      <h2>BMS diagnostics</h2>
-      <button onclick="diag()">Refresh diagnostics</button>
-      <div id="diag" class="muted" style="margin-top:10px">—</div>
+    <div id="ide-tasks" class="ide-tasks" style="display:none"></div>
+    <!-- Post form -->
+    <div id="ide-form" style="display:none;margin-top:8px">
+      <input id="ideSubject" class="inp" type="text" placeholder="Subject" style="margin-bottom:6px">
+      <textarea id="ideBody"    class="inp" rows="3" placeholder="Message body…" style="margin-bottom:6px"></textarea>
+      <input id="ideTo"      class="inp" type="text" placeholder="To (default: Coordinators)" style="margin-bottom:6px">
+      <button class="ide-btn" style="width:100%" onclick="ideDoPost()">Send to outbox (pending approval)</button>
     </div>
+    <div id="ide-log" class="muted"></div>
+  </div>
 
-    <div class="card">
-      <h2>Output</h2>
-      <div id="log">Ready. Type a question above or click a routine button.</div>
-    </div>
-  </main>
+  <!-- 7. BMS Diagnostics -->
+  <div class="card">
+    <h2>BMS diagnostics <span class="badge">PMAT</span></h2>
+    <button onclick="diag()">Refresh diagnostics</button>
+    <div id="diag" class="muted" style="margin-top:10px">—</div>
+  </div>
 
-  <script>
-    function log(s){ document.getElementById('log').textContent =
-      (typeof s === 'string' ? s : JSON.stringify(s, null, 2)); }
-    function fail(e){ log('ERROR: ' + (e && e.message ? e.message : e)); }
+  <!-- 8. Output -->
+  <div class="card">
+    <h2>Output</h2>
+    <div id="log">Ready. Ask Cassy a question, click a routine, or explore the panels above.</div>
+  </div>
 
-    function render(st){
-      document.getElementById('tagline').textContent = st.tagline;
-      document.getElementById('tz').textContent = ' · ' + st.tz;
-      var sel = document.getElementById('lang'); sel.innerHTML = '';
-      st.langs.forEach(function(l){
-        var o = document.createElement('option'); o.value=l; o.textContent=l;
-        if (l===st.lang) o.selected=true; sel.appendChild(o);
-      });
-      var box = document.getElementById('channels'); box.innerHTML='';
-      Object.keys(st.consent).forEach(function(c){
-        var on = st.consent[c];
-        var row = document.createElement('div'); row.className='row';
-        row.innerHTML = '<span>'+c+'</span>';
-        var b = document.createElement('button');
-        b.innerHTML = '<span class="pill '+(on?'on':'off')+'">'+(on?'ON':'OFF')+'</span>';
-        b.onclick = function(){ toggle(c); };
-        row.appendChild(b); box.appendChild(row);
-      });
-      var t = document.getElementById('trig');
-      if (st.triggers && st.triggers.length){ t.className='pill on'; t.textContent=st.triggers.length+' active'; }
-      else { t.className='pill off'; t.textContent='none'; }
-    }
+</main>
 
-    function chat(){
-      var q = document.getElementById('chatInput').value.trim();
-      if (!q) return;
-      log('Asking Cassy: "' + q + '" …');
-      google.script.run.withSuccessHandler(function(r){ log(r); }).withFailureHandler(fail).cassyUiChat(q);
-    }
+<script>
+/* ─── Helpers ─── */
+function log(s){
+  document.getElementById('log').textContent =
+    (typeof s === 'string' ? s : JSON.stringify(s, null, 2));
+}
+function fail(e){ log('ERROR: ' + (e && e.message ? e.message : e)); }
 
-    function runbook(){
-      var goals = document.getElementById('rbGoals').value.trim();
-      var tz = document.getElementById('rbTz').value.trim();
-      var del = document.getElementById('rbDelivery').value.trim();
-      log('Generating runbook…');
-      google.script.run.withSuccessHandler(log).withFailureHandler(fail).cassyUiRunbook(goals, tz, del);
-    }
+/* ─── Render state ─── */
+function render(st){
+  document.getElementById('tagline').textContent = st.tagline;
+  document.getElementById('tz').textContent = ' ' + st.tz;
 
-    function diag(){
-      var el = document.getElementById('diag'); el.textContent = 'Loading…';
-      google.script.run.withSuccessHandler(renderDiag).withFailureHandler(function(e){ el.textContent='ERROR: '+e.message; }).cassyUiDiagnostics();
-    }
-    function renderDiag(d){
-      var k = d.kpis;
-      var html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px">'
-        + kpiBox('Active channels', k.activeChannels)
-        + kpiBox('Triggers', k.triggers)
-        + kpiBox('Actions today', k.actionsToday)
-        + kpiBox('Gemini', k.gemini)
-        + kpiBox('Timezone', k.tz)
-        + kpiBox('Language', k.lang)
-        + '</div>';
-      html += '<div style="font-weight:600;color:var(--soft);margin:8px 0 4px">PMAT agents</div>';
-      d.pmat.forEach(function(a){
-        var col = a.status==='off' ? 'var(--off)' : (a.status==='active'||a.status==='armed'||a.status==='ready' ? 'var(--ok)' : 'var(--soft)');
-        html += '<div class="row" style="padding:4px 0"><span>'+a.name+' · <span style="color:var(--soft)">'+a.role+'</span></span>'
-              + '<span class="pill" style="background:#f3f4f6;color:'+col+'">'+a.status+'</span></div>';
-      });
-      html += '<div style="margin-top:8px;font-size:11px;color:var(--soft)">Grafcet: '+d.grafcet.join(' → ')+'</div>';
-      document.getElementById('diag').innerHTML = html;
-    }
-    function kpiBox(label, val){
-      return '<div style="background:#f7f9fb;border:1px solid var(--line);border-radius:8px;padding:8px">'
-           + '<div style="font-size:10px;text-transform:uppercase;color:var(--soft)">'+label+'</div>'
-           + '<div style="font-weight:700;font-size:13px;color:var(--ink)">'+val+'</div></div>';
-    }
+  // Language selector
+  var sel = document.getElementById('lang'); sel.innerHTML = '';
+  st.langs.forEach(function(l){
+    var o = document.createElement('option'); o.value = l; o.textContent = l;
+    if (l === st.lang) o.selected = true;
+    sel.appendChild(o);
+  });
 
-    function refresh(){ google.script.run.withSuccessHandler(render).withFailureHandler(fail).cassyState(); }
-    function setLang(){ google.script.run.withSuccessHandler(refresh).cassyUiSetLang(document.getElementById('lang').value); }
-    function toggle(c){ google.script.run.withSuccessHandler(refresh).withFailureHandler(fail).cassyUiToggle(c); }
-    function install(){ google.script.run.withSuccessHandler(function(m){ log(m); refresh(); }).withFailureHandler(fail).cassyUiInstall(); }
-    function removeT(){ google.script.run.withSuccessHandler(function(m){ log(m); refresh(); }).withFailureHandler(fail).cassyUiRemove(); }
-    function run(r){ log('Running '+r+'…'); google.script.run.withSuccessHandler(log).withFailureHandler(fail).cassyUiRun(r); }
+  // Channel toggles
+  var box = document.getElementById('channels'); box.innerHTML = '';
+  Object.keys(st.consent).forEach(function(c){
+    var on = st.consent[c];
+    var row = document.createElement('div'); row.className = 'row';
+    row.innerHTML = '<span>' + c + '</span>';
+    var b = document.createElement('button');
+    b.innerHTML = '<span class="pill ' + (on ? 'on' : 'off') + '">' + (on ? 'ON' : 'OFF') + '</span>';
+    b.onclick = function(){ toggle(c); };
+    row.appendChild(b); box.appendChild(row);
+  });
 
-    refresh();
-  </script>
+  // Trigger pill
+  var t = document.getElementById('trig');
+  if (st.triggers && st.triggers.length){
+    t.className = 'pill on'; t.textContent = st.triggers.length + ' active';
+  } else {
+    t.className = 'pill off'; t.textContent = 'none';
+  }
+
+  // IDE status indicator
+  var ideEl = document.getElementById('ide-status');
+  if (st.antigravity){ ideEl.style.display = 'inline-flex'; }
+  else { ideEl.style.display = 'none'; }
+}
+
+/* ─── Core actions ─── */
+function refresh(){ google.script.run.withSuccessHandler(render).withFailureHandler(fail).cassyState(); }
+function setLang(){ google.script.run.withSuccessHandler(refresh).cassyUiSetLang(document.getElementById('lang').value); }
+function toggle(c){ google.script.run.withSuccessHandler(refresh).withFailureHandler(fail).cassyUiToggle(c); }
+function install(){ google.script.run.withSuccessHandler(function(m){ log(m); refresh(); }).withFailureHandler(fail).cassyUiInstall(); }
+function removeT(){ google.script.run.withSuccessHandler(function(m){ log(m); refresh(); }).withFailureHandler(fail).cassyUiRemove(); }
+function run(r){ log('Running ' + r + '…'); google.script.run.withSuccessHandler(log).withFailureHandler(fail).cassyUiRun(r); }
+
+/* ─── Ask Cassy ─── */
+function chat(){
+  var q = document.getElementById('chatInput').value.trim();
+  if (!q) return;
+  log('Asking Cassy: "' + q + '" …');
+  google.script.run.withSuccessHandler(function(r){ log(r); }).withFailureHandler(fail).cassyUiChat(q);
+}
+
+/* ─── Runbook ─── */
+function runbook(){
+  var goals    = document.getElementById('rbGoals').value.trim();
+  var tz       = document.getElementById('rbTz').value.trim();
+  var delivery = document.getElementById('rbDelivery').value.trim();
+  log('Generating runbook…');
+  google.script.run.withSuccessHandler(log).withFailureHandler(fail).cassyUiRunbook(goals, tz, delivery);
+}
+
+/* ─── Antigravity IDE ─── */
+function ideCheckin(){
+  document.getElementById('ide-log').textContent = 'Checking in with hub…';
+  google.script.run
+    .withSuccessHandler(function(r){
+      document.getElementById('ide-log').textContent = r.log;
+      var box = document.getElementById('ide-tasks');
+      if (r.tasks && r.tasks.length){
+        box.style.display = 'block'; box.innerHTML = '';
+        r.tasks.forEach(function(t){
+          var el = document.createElement('div'); el.className = 'ide-task';
+          el.innerHTML = '<strong>' + (t.from || 'Coordinator') + '</strong> — ' +
+            (t.subject || '') + '<br><span style="color:var(--soft)">' + (t.body || '').slice(0,120) + '</span>';
+          box.appendChild(el);
+        });
+      } else {
+        box.style.display = 'none';
+      }
+      if (!r.enabled) document.getElementById('ide-log').textContent = r.log;
+    })
+    .withFailureHandler(function(e){ document.getElementById('ide-log').textContent = 'ERROR: ' + e.message; })
+    .cassyUiAntigravityCheckin();
+}
+
+function ideSetup(){
+  document.getElementById('ide-log').textContent = 'Initialising hub tabs…';
+  google.script.run
+    .withSuccessHandler(function(m){ document.getElementById('ide-log').textContent = m; })
+    .withFailureHandler(function(e){ document.getElementById('ide-log').textContent = 'ERROR: ' + e.message; })
+    .cassyUiAntigravitySetup();
+}
+
+function idePost(){
+  var form = document.getElementById('ide-form');
+  form.style.display = form.style.display === 'none' ? 'block' : 'none';
+}
+
+function ideDoPost(){
+  var subj = document.getElementById('ideSubject').value.trim();
+  var body = document.getElementById('ideBody').value.trim();
+  var to   = document.getElementById('ideTo').value.trim();
+  if (!subj){ document.getElementById('ide-log').textContent = 'Subject required.'; return; }
+  document.getElementById('ide-log').textContent = 'Sending…';
+  google.script.run
+    .withSuccessHandler(function(m){
+      document.getElementById('ide-log').textContent = m;
+      document.getElementById('ide-form').style.display = 'none';
+      document.getElementById('ideSubject').value = '';
+      document.getElementById('ideBody').value = '';
+    })
+    .withFailureHandler(function(e){ document.getElementById('ide-log').textContent = 'ERROR: ' + e.message; })
+    .cassyUiAntigravitySend(subj, body, to || 'Coordinators');
+}
+
+/* ─── Diagnostics ─── */
+function diag(){
+  var el = document.getElementById('diag'); el.innerHTML = 'Loading…';
+  google.script.run
+    .withSuccessHandler(renderDiag)
+    .withFailureHandler(function(e){ el.textContent = 'ERROR: ' + e.message; })
+    .cassyUiDiagnostics();
+}
+
+function renderDiag(d){
+  var k = d.kpis;
+  var html = '<div class="kpi-grid">'
+    + kpiBox('Channels',      k.activeChannels)
+    + kpiBox('Triggers',      k.triggers)
+    + kpiBox('Actions today', k.actionsToday)
+    + kpiBox('Gemini',        k.gemini)
+    + kpiBox('Timezone',      k.tz)
+    + kpiBox('Language',      k.lang)
+    + '</div>';
+
+  html += '<div style="font-size:11px;font-weight:600;color:var(--soft);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em">PMAT agents</div>';
+  d.pmat.forEach(function(a){
+    var col = a.status === 'off'  ? 'var(--off)' :
+              a.status === 'active' || a.status === 'armed' || a.status === 'ready'
+                ? 'var(--ok)' : 'var(--soft)';
+    html += '<div class="row" style="padding:4px 0">'
+          + '<span style="font-size:12px">' + a.name
+          + ' <span style="color:var(--soft);font-size:11px">· ' + a.role + '</span></span>'
+          + '<span class="pill" style="background:#f3f4f6;color:' + col + '">' + a.status + '</span>'
+          + '</div>';
+  });
+
+  html += '<div style="margin-top:10px;font-size:11px;color:var(--soft)">'
+        + '<strong>Grafcet:</strong> ' + d.grafcet.join(' → ') + '</div>';
+
+  document.getElementById('diag').innerHTML = html;
+}
+
+function kpiBox(label, val){
+  return '<div class="kpi-box">'
+       + '<div class="kpi-label">' + label + '</div>'
+       + '<div class="kpi-val">'   + val   + '</div>'
+       + '</div>';
+}
+
+/* ─── Boot ─── */
+refresh();
+</script>
 </body>
 </html>
