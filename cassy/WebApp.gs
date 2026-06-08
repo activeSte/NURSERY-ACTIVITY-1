@@ -30,8 +30,23 @@ function cassyState() {
     delivery: CASSY.delivery,
     triggers: listCassyTriggers(),
     tagline:  Cassy_t('app.tagline'),
-    antigravity: Cassy_antigravityEnabled_()
+    antigravity: Cassy_antigravityEnabled_(),
+    avatarUrl:   Cassy_avatarUrl_()
   };
+}
+
+/**
+ * Cassy avatar image URL. Set CASSY_AVATAR_URL in Script Properties to a
+ * Drive-hosted image, e.g. a Drive file ID becomes:
+ *   https://drive.google.com/thumbnail?id=FILE_ID&sz=w240
+ * If only a bare file ID is stored, it is expanded automatically.
+ * Empty → the panel falls back to the built-in SVG avatar.
+ */
+function Cassy_avatarUrl_() {
+  const v = (PropertiesService.getScriptProperties().getProperty('CASSY_AVATAR_URL') || '').trim();
+  if (!v) return '';
+  if (/^https?:\/\//i.test(v)) return v;                 // full URL
+  return 'https://drive.google.com/thumbnail?id=' + v + '&sz=w240';  // bare Drive file ID
 }
 
 /* ---- Core UI wires ---- */
