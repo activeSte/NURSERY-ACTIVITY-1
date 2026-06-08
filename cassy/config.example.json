@@ -1,0 +1,29 @@
+{
+  "owner": "S1.PINATO@gmail.com",
+  "timezone": "Etc/GMT",
+  "timezoneLabel": "GMT+0",
+  "language": "EN",
+  "languageRuler": ["EN", "IT", "DE", "ZH", "JA", "FR", "HI"],
+  "quietHours": { "start": 21, "end": 6 },
+  "channels": {
+    "gmail":    { "consent": false, "mode": "read+draft" },
+    "calendar": { "consent": false, "mode": "read+propose" },
+    "drive":    { "consent": false, "mode": "read+file" },
+    "tasks":    { "consent": false, "mode": "read+write" },
+    "contacts": { "consent": false, "mode": "read" }
+  },
+  "delivery": { "email": true, "calendar": false, "sheet": true, "notionPage": "Cassy Daily" },
+  "staleDealDays": 14,
+  "guardrails": {
+    "outboundSendRequiresApproval": true,
+    "externalInviteRequiresApproval": true,
+    "deleteRequiresApproval": true,
+    "pecAutoAction": false,
+    "redactPiiInLogs": true
+  },
+  "bridges": {
+    "note": "Libero / Yahoo / AOL / Aruba Webmail / Aruba PEC have no API connector in this environment.",
+    "options": ["imap_smtp_bridge (opt-in, separate service)", "forward_into_gmail (manual filter)"],
+    "pec": "Read-only + manual confirm only; certified legal mail, never auto-actioned."
+  }
+}

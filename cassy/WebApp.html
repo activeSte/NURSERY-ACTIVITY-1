@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <style>
+    :root { --ink:#1f2933; --soft:#52606d; --line:#e4e7eb; --ok:#0b804b; --off:#9aa5b1; --bg:#f7f9fb; }
+    * { box-sizing: border-box; }
+    body { font-family: -apple-system, Segoe UI, Roboto, sans-serif; color: var(--ink);
+           margin: 0; background: var(--bg); }
+    header { background: #0d3b44; color: #fff; padding: 16px 20px; display:flex;
+             align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+    header h1 { font-size: 18px; margin: 0; }
+    header .tag { font-size: 12px; opacity: .85; }
+    main { max-width: 760px; margin: 0 auto; padding: 18px; }
+    .card { background:#fff; border:1px solid var(--line); border-radius:10px;
+            padding:14px 16px; margin-bottom:14px; }
+    .card h2 { font-size: 14px; margin: 0 0 10px; text-transform: uppercase;
+               letter-spacing:.04em; color: var(--soft); }
+    .row { display:flex; align-items:center; justify-content:space-between;
+           padding:6px 0; border-bottom:1px dashed var(--line); }
+    .row:last-child { border-bottom:0; }
+    button { border:1px solid var(--line); background:#fff; border-radius:8px;
+             padding:6px 12px; cursor:pointer; font-size:13px; }
+    button:hover { border-color:#0d3b44; }
+    button.run { background:#0d3b44; color:#fff; border-color:#0d3b44; }
+    .pill { font-size:11px; padding:2px 8px; border-radius:999px; }
+    .pill.on { background:#b3efd3; color:var(--ok); }
+    .pill.off{ background:#f3f4f6; color:var(--off); }
+    select { padding:6px 8px; border-radius:8px; border:1px solid var(--line); }
+    #log { font-family: ui-monospace, monospace; font-size:12px; white-space:pre-wrap;
+           background:#0d3b44; color:#b3efd3; border-radius:8px; padding:12px; min-height:60px; }
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .muted { color:var(--soft); font-size:12px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>🛟 Cassy</h1>
+      <div class="tag" id="tagline">Your ethics-first personal assistant</div>
+    </div>
+    <div>
+      <label class="tag">Lang</label>
+      <select id="lang" onchange="setLang()"></select>
+      <span class="tag" id="tz"></span>
+    </div>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>Channels (consent — default OFF)</h2>
+      <div id="channels"></div>
+      <p class="muted">Read-only by default. Outbound sends / external invites / deletes always require explicit approval. Aruba PEC is never auto-actioned.</p>
+    </div>
+
+    <div class="card">
+      <h2>Run a routine now</h2>
+      <div class="grid">
+        <button class="run" onclick="run('morningBrief')">Morning Brief</button>
+        <button class="run" onclick="run('inboxTriage')">Inbox Triage</button>
+        <button class="run" onclick="run('calendarGuard')">Calendar Guard</button>
+        <button class="run" onclick="run('eodWrap')">End-of-Day Wrap</button>
+        <button class="run" onclick="run('weeklyHygiene')">Weekly Hygiene</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Recurring schedule (GMT)</h2>
+      <div class="row"><span>Triggers installed</span><span id="trig" class="pill off">none</span></div>
+      <div class="grid" style="margin-top:8px">
+        <button onclick="install()">Install triggers</button>
+        <button onclick="removeT()">Remove triggers</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Output</h2>
+      <div id="log">Ready.</div>
+    </div>
+  </main>
+
+  <script>
+    function log(s){ document.getElementById('log').textContent =
+      (typeof s === 'string' ? s : JSON.stringify(s, null, 2)); }
+    function fail(e){ log('⚠️ ' + (e && e.message ? e.message : e)); }
+
+    function render(st){
+      document.getElementById('tagline').textContent = st.tagline;
+      document.getElementById('tz').textContent = ' · ' + st.tz;
+      var sel = document.getElementById('lang'); sel.innerHTML = '';
+      st.langs.forEach(function(l){
+        var o = document.createElement('option'); o.value=l; o.textContent=l;
+        if (l===st.lang) o.selected=true; sel.appendChild(o);
+      });
+      var box = document.getElementById('channels'); box.innerHTML='';
+      Object.keys(st.consent).forEach(function(c){
+        var on = st.consent[c];
+        var row = document.createElement('div'); row.className='row';
+        row.innerHTML = '<span>'+c+'</span>';
+        var b = document.createElement('button');
+        b.innerHTML = '<span class="pill '+(on?'on':'off')+'">'+(on?'ON':'OFF')+'</span>';
+        b.onclick = function(){ toggle(c); };
+        row.appendChild(b); box.appendChild(row);
+      });
+      var t = document.getElementById('trig');
+      if (st.triggers && st.triggers.length){ t.className='pill on'; t.textContent=st.triggers.length+' active'; }
+      else { t.className='pill off'; t.textContent='none'; }
+    }
+
+    function refresh(){ google.script.run.withSuccessHandler(render).withFailureHandler(fail).cassyState(); }
+    function setLang(){ google.script.run.withSuccessHandler(refresh).cassyUiSetLang(document.getElementById('lang').value); }
+    function toggle(c){ google.script.run.withSuccessHandler(refresh).withFailureHandler(fail).cassyUiToggle(c); }
+    function install(){ google.script.run.withSuccessHandler(function(m){ log(m); refresh(); }).withFailureHandler(fail).cassyUiInstall(); }
+    function removeT(){ google.script.run.withSuccessHandler(function(m){ log(m); refresh(); }).withFailureHandler(fail).cassyUiRemove(); }
+    function run(r){ log('Running '+r+'…'); google.script.run.withSuccessHandler(log).withFailureHandler(fail).cassyUiRun(r); }
+
+    refresh();
+  </script>
+</body>
+</html>
